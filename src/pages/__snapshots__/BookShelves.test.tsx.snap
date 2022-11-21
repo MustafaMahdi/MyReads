@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BookShelves component should route to search page when click on the link action 1`] = `
+<a
+  href="/search"
+  onClick={[Function]}
+/>
+`;
