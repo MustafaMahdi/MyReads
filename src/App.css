@@ -175,3 +175,9 @@ body,
   text-align: center;
   font-size: 0.8em;
 }
+.search-paragragh {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+  text-align: center;
+}
