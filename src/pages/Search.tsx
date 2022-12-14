@@ -12,21 +12,24 @@ const Search: React.FC<{
     changeShelfHandler: (book: BookInterface, selectedShelf: string) => void
 }> = (props) => {
     const [searchInput, setSearchInput] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [searchBooksResult, setSearchBooksResult] = useState<BookInterface[]>([]);
 
-    const getSearchResult = (searchQuery:string) => {
-
+    const getSearchResult = async (searchQuery: string) => {
+        searchQuery = searchQuery.toString();
+        searchQuery = searchQuery.toLowerCase();
         if (searchQuery.length !== 0) {
-            BooksAPI.search(searchQuery).then((matchedBooks) => {
-                if (matchedBooks.error) {
-                    setSearchBooksResult([]);
-                } else {
-                    setSearchBooksResult(matchedBooks);
-                }
-            });
+            setIsLoading(true);
+            const matchedBooks = await BooksAPI.search(searchQuery);
+            if (matchedBooks.error) {
+                setSearchBooksResult([]);
+            } else {
+                setSearchBooksResult(matchedBooks);
+            }
         } else {
             setSearchBooksResult([]);
         }
+        setIsLoading(false);
     }
     const searchInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(event.target.value);
@@ -65,13 +68,29 @@ const Search: React.FC<{
                     />
                 </div>
             </div>
-
-            <div className="search-books-results">
+            {!isLoading && searchInput.length !== 0 && <div className="search-books-results">
                 <ol className="books-grid">
                     {
                         matchedBooks
                     }
                 </ol>
+            </div>}
+            <div className="search-books-results">
+                {
+                    !isLoading && searchInput.length !== 0 && searchBooksResult.length === 0 && <p className='search-paragragh'>
+                        No Search Results,
+                        Please Enter Something Else.
+                    </p>
+                }
+                {
+                    isLoading && <p className='search-paragragh'>Loading...</p>
+                }
+
+                {
+                    !isLoading && searchInput.length === 0 && <p className='search-paragragh'>
+                        Please Enter Something In the Search Box
+                    </p>
+                }
             </div>
         </div>
     );
