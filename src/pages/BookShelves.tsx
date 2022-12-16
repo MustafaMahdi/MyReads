@@ -9,38 +9,54 @@ const BookShelves: React.FC<{
   changeShelfHandler: (book: BookInterface, selectedShelf: string) => void
 }> = (props) => {
 
-  const currentlyReading = props.books.filter(book => book.shelf === ShelvesType.CurrentlyReading)
-    .map(book => (
-      <li key={book.id} >
-        <Book
-          book={book}
-          currentShelf={ShelvesType.CurrentlyReading}
-          onChangeShelf={props.changeShelfHandler}
-        />
-      </li>
-    ));
+  const currentlyReadingBooks: BookInterface[] = [];
+  const wantToReadBooks: BookInterface[] = [];
+  const readBooks: BookInterface[] = [];
+  
+// filtering books on its shelf
+  props.books.forEach(book => {
+    switch (book.shelf) {
+      case ShelvesType.CurrentlyReading:
+        currentlyReadingBooks.push(book)
+        break;
+      case ShelvesType.WantToRead:
+        wantToReadBooks.push(book)
+        break;
+      case ShelvesType.Read:
+        readBooks.push(book)
+        break;
+    }
+  });
+  // rendering list for each shelf
+  const currentlyReading = currentlyReadingBooks.map(book => (
+    <li key={book.id} >
+      <Book
+        book={book}
+        currentShelf={ShelvesType.CurrentlyReading}
+        onChangeShelf={props.changeShelfHandler}
+      />
+    </li>
+  ));
 
-  const wantToRead = props.books.filter(book => book.shelf === ShelvesType.WantToRead)
-    .map(book => (
-      <li key={book.id} >
-        <Book
-          book={book}
-          currentShelf={ShelvesType.WantToRead}
-          onChangeShelf={props.changeShelfHandler}
-        />
-      </li>
-    ));
+  const wantToRead = wantToReadBooks.map(book => (
+    <li key={book.id} >
+      <Book
+        book={book}
+        currentShelf={ShelvesType.WantToRead}
+        onChangeShelf={props.changeShelfHandler}
+      />
+    </li>
+  ));
 
-  const read = props.books.filter(book => book.shelf === ShelvesType.Read)
-    .map(book => (
-      <li key={book.id} >
-        <Book
-          book={book}
-          currentShelf={ShelvesType.Read}
-          onChangeShelf={props.changeShelfHandler}
-        />
-      </li>
-    ));
+  const read = readBooks.map(book => (
+    <li key={book.id} >
+      <Book
+        book={book}
+        currentShelf={ShelvesType.Read}
+        onChangeShelf={props.changeShelfHandler}
+      />
+    </li>
+  ));
   return (
     <div>
       <div className="list-books-title">
